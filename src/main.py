@@ -13,6 +13,7 @@ def parse_args():
     
     # take command line arguments and make array
     parser.add_argument('--files', nargs = '*', help = "File names for the array")
+    parser.add_argument('--keywords', type=str, nargs = '+', default='TODO', help = "Keywords to search for todo items")
 
     return parser.parse_args()
 
@@ -78,13 +79,16 @@ def get_comment_tokens(file_text, lexer):
             yield tokens[1]
 
 
-
 def main():
     args = parse_args()
     print(args)
 
     file_names = args.files
 
+    keywords = args.keywords
+
+
+    '''
     for file in file_names:
         tokens_with_lines = get_tokens_from_file(file)
         print("*" * 60)
@@ -92,6 +96,7 @@ def main():
         print("*" * 60)
         for line_number in tokens_with_lines.keys():
             print(str(line_number) + " : '" + tokens_with_lines[line_number] + "'")
+    '''
 
 if __name__=='__main__':
     main()
