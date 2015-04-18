@@ -44,3 +44,4 @@ def test_get_tokens_from_file():
         #print(index)
         print(file)
         assert number_of_comments[index] == len(result.keys())
+
