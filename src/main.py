@@ -6,6 +6,8 @@ import sys
 import argparse
 from argparse import ArgumentParser
 
+from collections import Counter
+
 def parse_args():
 
     # make the parser
@@ -13,7 +15,7 @@ def parse_args():
     
     # take command line arguments and make array
     parser.add_argument('--files', nargs = '*', help = "File names for the array")
-    parser.add_argument('--keywords', type=str, nargs = '+', default='TODO', help = "Keywords to search for todo items")
+    parser.add_argument('--keywords', type=str, nargs = '+', default=['TODO'], help = "Keywords to search for todo items")
 
     return parser.parse_args()
 
@@ -78,6 +80,31 @@ def get_comment_tokens(file_text, lexer):
             #print(tokens)
             yield tokens[1]
 
+def find_Keywords(comment, keywords):
+	
+	# constants
+	array = []
+	count = 0
+
+	# loop through key words & split comment into lines
+	for keyword in keywords:
+		comment_line_by_line = comment.splitlines()
+
+		# loop through the lines and for each word strip white space
+		# see if the word in the comment matches keyword
+		for comment_line in comment_line_by_line:
+			comment_line = comment_line.lstrip()
+			index_of_keyword = comment_line.find(keyword)
+
+			# get the index of the matching word 
+			# only use if the index is < 10 and > -1
+			if index_of_keyword == -1:
+				continue
+			else:
+				if index_of_keyword < 10:
+					print("GOT IT!")
+				else:
+					continue
 
 def main():
     args = parse_args()
@@ -86,7 +113,9 @@ def main():
     file_names = args.files
 
     keywords = args.keywords
-
+    
+    comment = "                     #TODO"
+    find_Keywords(comment, keywords)
 
     '''
     for file in file_names:
