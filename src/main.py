@@ -3,19 +3,35 @@ from pygments.token import *
 from pygments.lexers import guess_lexer, guess_lexer_for_filename
 
 import sys
+import os
 import argparse
 from argparse import ArgumentParser
 
-from collections import Counter
+global_error_list = []
 
 def parse_args():
+    '''
+    Argument Parsing Helper Function
 
+    Setups and runs the arg parse library to parse the command line arguments for us.
+
+    Returns
+    -------
+        Already populated set of arguments ready for the taking.
+    '''
+    app_description = """
+        WHATODO - 
+        Keeps track of your TODO tasks in code. This quick app will scan
+        all the files provided and give give you the location and summary 
+        of any pending tasks marked with TODO.
+    """
     # make the parser
-    parser = argparse.ArgumentParser(description = "Make array of files")
+    parser = argparse.ArgumentParser(description = app_description)
     
     # take command line arguments and make array
-    parser.add_argument('--files', nargs = '*', help = "File names for the array")
-    parser.add_argument('--keywords', type=str, nargs = '+', default=['TODO'], help = "Keywords to search for todo items")
+    parser.add_argument('files', type=str, nargs = '+', help = "File for TODO checking")
+    parser.add_argument('-k', '--keywords', type=str, nargs = '*', default=['TODO'], 
+                        help = "Keywords for TODO items, case sensitive. Defaults to TODO")
 
     return parser.parse_args()
 
@@ -23,23 +39,28 @@ def get_tokens_from_file(filepath):
     # Read the file in
     file_text = ""
 
-    with open(filepath) as file:
-        for line in file:
-            file_text += line
+    # Check if filename is an actual valid file
+    if os.path.isfile(filepath):
+        with open(filepath) as file:
+            for line in file:
+                file_text += line
+    else:
+        global_error_list.append("ERROR: " + filepath + " is not a file. Can't process.")
 
     # Determine the lexer we need to use to understand this file
     lexer = None
 
+    # TODO Determine the best way of figuring out the mimetype for certain files,
+    #      right now we suck.. Like bad.
     try:
         lexer = guess_lexer(file_text)
     except Exception as e:
         lexer = guess_lexer_for_filename(filepath, file_text)
     finally:
         if lexer == None:
-            print("ERROR: Unable to find a lexer")
-            print("       Can't process " + str(filepath))
-            return []
-
+            global_error_list.append("ERROR:\tUnable to find a lexer\n\t\t\tCan't process " + str(filepath))
+            return {}
+    
     comments_with_lines = {}
 
     # Get the comment tokens
@@ -56,8 +77,6 @@ def get_tokens_from_file(filepath):
                 comments_with_lines[num] = comment
     
     return comments_with_lines
-
-
 
 
 def get_comment_tokens(file_text, lexer):
@@ -126,10 +145,8 @@ def find_Keywords(comment, keywords):
 
 def main():
     args = parse_args()
-    print(args)
 
     file_names = args.files
-
     keywords = args.keywords
     
     comment = """
@@ -143,18 +160,26 @@ def main():
 	#TASKSKSKSKSKSKS
     """
 
-    find_Keywords(comment, keywords)
+    #find_Keywords(comment, keywords)
+    #comment = "                     #TODO"
+    #find_Keywords(comment, keywords)
 
-    '''for file in file_names:
-        tokens_with_lines = get_tokens_from_file(file)
+    for file in file_names:
         print("*" * 60)
         print("File:\t" +  file)
         print("*" * 60)
+        tokens_with_lines = get_tokens_from_file(file)
         for line_number in tokens_with_lines.keys():
             comment = tokens_with_lines[line_number]
             print(str(line_number) + " : '" + comment + "'")
             find_Keywords(comment, keywords)
-    '''
+
+
+
+    for error in global_error_list:
+        print(error)
+
+
 
 if __name__=='__main__':
     main()
