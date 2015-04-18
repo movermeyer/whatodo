@@ -86,13 +86,15 @@ def find_Keywords(comment, keywords):
 	array = []
 	count = 0
 
+	todos = []
+
 	# loop through key words & split comment into lines
 	for keyword in keywords:
 		comment_line_by_line = comment.splitlines()
 
 		# loop through the lines and for each word strip white space
 		# see if the word in the comment matches keyword
-		for comment_line in comment_line_by_line:
+		for index,comment_line in enumerate(comment_line_by_line,0):
 			comment_line = comment_line.lstrip()
 			index_of_keyword = comment_line.find(keyword)
 
@@ -103,8 +105,24 @@ def find_Keywords(comment, keywords):
 			else:
 				if index_of_keyword < 10:
 					print("GOT IT!")
+					rest_of_comment = comment_line_by_line[index:]
+
+					# loop through remaining comment to locate 
+					# any "empty" lines  
+					found = False
+					for end_index,newLine in enumerate(rest_of_comment,index):
+						if len(newLine) == 0:
+							# if "empty" line found
+							todos.append(comment_line_by_line[index:end_index])
+							found = True
+							break
+					if not found:
+						# if no "empty" lines found 
+						todos.append(rest_of_comment)
+
 				else:
 					continue
+	print(todos)
 
 def main():
     args = parse_args()
@@ -114,17 +132,28 @@ def main():
 
     keywords = args.keywords
     
-    comment = "                     #TODO"
+    comment = """
+	Comments here
+
+	TODO This is a todo
+	This is a body #HASHTAGGALORE 
+	#TWITTERSUCKS 
+
+	TODO This is a second todo
+	#TASKSKSKSKSKSKS
+    """
+
     find_Keywords(comment, keywords)
 
-    '''
-    for file in file_names:
+    '''for file in file_names:
         tokens_with_lines = get_tokens_from_file(file)
         print("*" * 60)
         print("File:\t" +  file)
         print("*" * 60)
         for line_number in tokens_with_lines.keys():
-            print(str(line_number) + " : '" + tokens_with_lines[line_number] + "'")
+            comment = tokens_with_lines[line_number]
+            print(str(line_number) + " : '" + comment + "'")
+            find_Keywords(comment, keywords)
     '''
 
 if __name__=='__main__':
