@@ -1,11 +1,11 @@
-import pygments
-from pygments.token import *
-from pygments.lexers import guess_lexer, guess_lexer_for_filename
-
 import sys
 import os
 import argparse
+import pygments
+import json
 from argparse import ArgumentParser
+from pygments.token import *
+from pygments.lexers import guess_lexer, guess_lexer_for_filename
 
 global_error_list = []
 
@@ -19,8 +19,7 @@ def parse_args():
     -------
         Already populated set of arguments ready for the taking.
     '''
-    app_description = """
-        WHATODO - 
+    app_description = """ WHATODO - 
         Keeps track of your TODO tasks in code. This quick app will scan
         all the files provided and give give you the location and summary 
         of any pending tasks marked with TODO.
@@ -96,7 +95,7 @@ def get_comment_tokens(file_text, lexer):
     '''
     for tokens in pygments.lex(file_text, lexer):
         if tokens[0] in Comment:
-            #print(tokens)
+            # Just yield the comment string, nothing more
             yield tokens[1]
 
 def find_Keywords(comment, keywords):
@@ -141,7 +140,6 @@ def main():
         tokens_with_lines = get_tokens_from_file(file)
         for line_number in tokens_with_lines.keys():
             print(str(line_number) + " : '" + tokens_with_lines[line_number] + "'")
-
 
     for error in global_error_list:
         print(error)
