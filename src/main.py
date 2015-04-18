@@ -1,10 +1,22 @@
 import pygments
 from pygments.token import *
-
 from pygments.lexers import guess_lexer, guess_lexer_for_filename
 
-def get_tokens_from_file(filepath):
+import sys
+import argparse
+from argparse import ArgumentParser
 
+def filesArray():
+
+    # make the parser
+    parser = argparse.ArgumentParser(description = "Make array of files")
+    
+    # take command line arguments and make array
+    parser.add_argument('--files', nargs = '*', help = "File names for the array")
+
+    print(parser.parse_args())
+
+def get_tokens_from_file(filepath):
     # Read the file in
     file_text = ""
 
