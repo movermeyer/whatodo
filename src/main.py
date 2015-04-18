@@ -6,7 +6,7 @@ import sys
 import argparse
 from argparse import ArgumentParser
 
-def filesArray():
+def parse_args():
 
     # make the parser
     parser = argparse.ArgumentParser(description = "Make array of files")
@@ -14,7 +14,7 @@ def filesArray():
     # take command line arguments and make array
     parser.add_argument('--files', nargs = '*', help = "File names for the array")
 
-    print(parser.parse_args())
+    return parser.parse_args()
 
 def get_tokens_from_file(filepath):
     # Read the file in
@@ -42,21 +42,16 @@ def get_tokens_from_file(filepath):
     # Get the comment tokens
     for comment in get_comment_tokens(file_text, lexer):
         for num, line in enumerate(file_text.splitlines(), 1):
-            # This should make sure to catch the multiline comments,
-            # instead of doing ==
-            #print(str(num) + " : " + line)
-
+            # Eliminate issues with newlines as comments
+            if len(comment.strip()) == 0:
+                continue
             # Account for multi line comments, only take the comment line
             # since we want to give out where the comment starts
             first_comment_line = comment.splitlines()[0]
 
-            # Get the index for the start of the first comment,
-            # this will help account for indentation, inline comments
-            # and others
             if first_comment_line in line:
-                #print(str(num) + " : " + comment)
                 comments_with_lines[num] = comment
-
+    
     return comments_with_lines
 
 
@@ -79,13 +74,16 @@ def get_comment_tokens(file_text, lexer):
     '''
     for tokens in pygments.lex(file_text, lexer):
         if tokens[0] in Comment:
+            #print(tokens)
             yield tokens[1]
 
 
 
 def main():
+    args = parse_args()
+    print(args)
 
-    file_names = ["examples/ruby_example.rb", "examples/ruby_example"]
+    file_names = args.files
 
     for file in file_names:
         tokens_with_lines = get_tokens_from_file(file)
@@ -93,13 +91,7 @@ def main():
         print("File:\t" +  file)
         print("*" * 60)
         for line_number in tokens_with_lines.keys():
-            print(str(line_number) + " : " + tokens_with_lines[line_number])
-
-    #get_tokens_from_file("examples/ruby_example.rb")
-    '''
-    for tokens in get_tokens_from_file("examples/ruby_example.rb"):
-        print(tokens)
-    '''
+            print(str(line_number) + " : '" + tokens_with_lines[line_number] + "'")
 
 if __name__=='__main__':
     main()
