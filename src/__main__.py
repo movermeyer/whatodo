@@ -1,4 +1,4 @@
 #!/bin/python
 
-import main
+import src.main
 main.main()
