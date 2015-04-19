@@ -6,6 +6,7 @@ import json
 from argparse import ArgumentParser
 from pygments.token import *
 from pygments.lexers import guess_lexer, guess_lexer_for_filename
+from todo import TODO
 
 global_error_list = []
 
@@ -31,6 +32,7 @@ def parse_args():
     parser.add_argument('files', type=str, nargs = '+', help = "File for TODO checking")
     parser.add_argument('-k', '--keywords', type=str, nargs = '*', default=['TODO'], 
                         help = "Keywords for TODO items, case sensitive. Defaults to TODO")
+    parser.add_argument('--json', action='store_const', const=True)
 
     return parser.parse_args()
 
@@ -126,7 +128,6 @@ def find_Keywords(comment, keywords):
 				continue
 			else:
 				if index_of_keyword < 10:
-					print("GOT IT!")
 					rest_of_comment = comment_line_by_line[index:]
 
 					# loop through remaining comment to locate 
@@ -199,25 +200,44 @@ def main():
 
     file_names = args.files
     keywords = args.keywords
+    use_json = args.json
     
     #find_Keywords(comment, keywords)
     #comment = "                     #TODO"
     #find_Keywords(comment, keywords)
 
+    TODOS = []
+    
+
     for file in file_names:
-        print("*" * 60)
-        print("File:\t" +  file)
-        print("*" * 60)
         tokens_with_lines = get_tokens_from_file(file)
 
 
         cleaned_up_tokens = merge_single_line_comments(tokens_with_lines)
         for line_number in sorted(tokens_with_lines.keys()):
             comment = tokens_with_lines[line_number]
-            print(str(line_number) + " : '" + comment + "'")
+            #print(str(line_number) + " : '" + comment + "'")
             todos = find_Keywords(comment, keywords)
+
             for todo in todos:
-                print(todo)
+                if len(todo) > 1:
+                    todo = "\n".join(todo).strip()
+                TODOS.append(TODO(comment, file, line_number, keywords))
+
+    if use_json:
+        TODOS_JSON = []
+        for t in TODOS:
+            TODOS_JSON.append(t.__dict__())
+        todos_json = json.dumps(TODOS_JSON)
+        print(todos_json)
+    else:
+        for t in TODOS:
+            print(t)
+
+
+    
+    
+
 
 
 

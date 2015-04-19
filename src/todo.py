@@ -7,11 +7,12 @@ class TODO(object):
 	"""
 
 	def __init__(self, comment, filename, line_number, keywords):
-		print("'" + comment + "'")
+		#print("'" + comment + "'")
 
 		# define variables
 		self.filename = filename
 		self.line_number = line_number
+		self.tags = []
 
 		comment_lines = comment.splitlines()
 
@@ -46,7 +47,7 @@ class TODO(object):
 
 			# find and extract tags
 			self.tags = re.findall(r'#\w*', self.body)
-			print(self.tags)
+			#print(self.tags)
 
 		else:
 			self.body = ""
@@ -68,6 +69,20 @@ class TODO(object):
 			ret += str(tag) + ", "
 
 		return ret
+
+	def __dict__(self):
+		ret = {}
+		ret["filename"] = self.filename
+		ret["line_number"] = self.line_number
+		ret["title"] = self.title
+		ret["body"] = self.body
+		ret["tags"] = self.tags
+
+		return ret
+
+	def to_JSON(self):
+		return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
 
 
 
