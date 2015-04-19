@@ -1,4 +1,4 @@
 #!/bin/python
 
-import todo
-todo.main()
+import main
+main.main()
