@@ -45,3 +45,55 @@ def test_get_tokens_from_file():
         print(file)
         assert number_of_comments[index] == len(result.keys())
 
+
+test_A = "// TODO This is a example todo with #TAGS #TODOAWESOME"
+     
+test_B = "#todo This is a example todo with #TAGS #TODOAWESOME"
+
+test_C = """/**TODO This is a todo 
+         #HASHTAGGALORE 
+         #TWITTERSUCKS 
+         */"""
+
+test_D = """Comments here
+
+
+         TODO This is a todo
+         This is a body #HASHTAGGALORE 
+         #TWITTERSUCKS 
+
+         TODO This is a second todo
+         #TASKSKSKSK"""
+
+test_E = """/* TODO This is a todo
+        *
+        * TODO  This is a new todo
+        *       With a body too!
+        *
+        * TODO This is the third one
+        *      lets keep it going... #BRICKHACKS
+        *
+        * TODO And a final lonely one...
+        */"""
+
+def test_find_Keywords():
+    test_A_findKey = find_Keywords(test_A, ["TODO"])
+
+    assert len(test_A_findKey) == 1
+
+    test_B_findKey = find_Keywords(test_B, ["TODO"])
+
+    assert len(test_B_findKey) == 0
+
+    test_C_findKey = find_Keywords(test_C, ["TODO"])
+
+    assert len(test_C_findKey) == 1
+
+    test_D_findKey = find_Keywords(test_D, ["TODO"])
+
+    assert len(test_D_findKey) == 2
+
+    test_E_findKey = find_Keywords(test_E, ["TODO"])
+
+    assert len(test_E_findKey) == 4
+
