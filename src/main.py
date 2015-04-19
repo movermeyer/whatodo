@@ -141,6 +141,7 @@ def find_Keywords(comment, keywords):
 				else:
 					continue
 	print(todos)
+	return todos
 
 def main():
     args = parse_args()
@@ -148,16 +149,7 @@ def main():
     file_names = args.files
     keywords = args.keywords
     
-    comment = """
-	Comments here
 
-	TODO This is a todo
-	This is a body #HASHTAGGALORE 
-	#TWITTERSUCKS 
-
-	TODO This is a second todo
-	#TASKSKSKSKSKSKS
-    """
 
     #find_Keywords(comment, keywords)
     #comment = "                     #TODO"
