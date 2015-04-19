@@ -140,7 +140,7 @@ def find_Keywords(comment, keywords):
 
 				else:
 					continue
-	print(todos)
+
 	return todos
 
 def main():
