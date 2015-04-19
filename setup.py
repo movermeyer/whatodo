@@ -18,14 +18,14 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='WHATODO',
+    name='whatodo',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.1b1',
+    version='0.0.1a1',
 
-    description='A sample Python project',
+    description='Python app to help developers manage development tasks using TODO\'s',
     long_description=long_description,
 
     # The project's main homepage.
