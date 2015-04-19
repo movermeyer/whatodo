@@ -1,5 +1,5 @@
 import pytest
-from main import *
+from src.main import *
 
 test_files = [  "examples/C/filenames/script", "examples/Clojure/index.cljs.hl", 
                 "examples/Chapel/lulesh.chpl", "examples/Forth/core.fth", 
