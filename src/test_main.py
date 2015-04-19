@@ -40,7 +40,7 @@ def test_get_comment_tokens():
 
 def test_get_tokens_from_file():
     for index,file in enumerate(test_files, 0):
-        result = get_tokens_from_file("../" + file)
+        result = get_tokens_from_file(file)
         #print(index)
         print(file)
         assert number_of_comments[index] == len(result.keys())
