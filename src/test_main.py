@@ -108,4 +108,9 @@ def test_merge_single_line_comments():
     # Check that the lines we expect to merge were merged
     assert 1 in merged_result.keys() and 6 in merged_result.keys()
 
+def test_expand_file_paths():
+    path = ["./examples/C/"]
 
+    test_expand = expand_file_paths(path)
+
+    assert len(test_expand) == 54

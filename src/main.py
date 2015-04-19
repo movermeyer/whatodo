@@ -99,49 +99,49 @@ def get_comment_tokens(file_text, lexer):
             yield tokens[1]
 
 def find_Keywords(comment, keywords):
-	
-	# constants
-	array = []
-	count = 0
+    
+    # constants
+    array = []
+    count = 0
 
-	todos = []
+    todos = []
 
-	# loop through key words & split comment into lines
-	for keyword in keywords:
-		comment_line_by_line = comment.splitlines()
+    # loop through key words & split comment into lines
+    for keyword in keywords:
+        comment_line_by_line = comment.splitlines()
 
-		# loop through the lines and for each word strip white space
-		# see if the word in the comment matches keyword
-		for index,comment_line in enumerate(comment_line_by_line,0):
-			comment_line = comment_line.lstrip()
-			index_of_keyword = comment_line.find(keyword)
+        # loop through the lines and for each word strip white space
+        # see if the word in the comment matches keyword
+        for index,comment_line in enumerate(comment_line_by_line,0):
+            comment_line = comment_line.lstrip()
+            index_of_keyword = comment_line.find(keyword)
 
-			# get the index of the matching word 
-			# only use if the index is < 10 and > -1
-			if index_of_keyword == -1:
-				continue
-			else:
-				if index_of_keyword < 10:
-					print("GOT IT!")
-					rest_of_comment = comment_line_by_line[index:]
+            # get the index of the matching word 
+            # only use if the index is < 10 and > -1
+            if index_of_keyword == -1:
+                continue
+            else:
+                if index_of_keyword < 10:
+                    print("GOT IT!")
+                    rest_of_comment = comment_line_by_line[index:]
 
-					# loop through remaining comment to locate 
-					# any "empty" lines  
-					found = False
-					for end_index,newLine in enumerate(rest_of_comment,index):
-						if len(newLine) == 0:
-							# if "empty" line found
-							todos.append(comment_line_by_line[index:end_index])
-							found = True
-							break
-					if not found:
-						# if no "empty" lines found 
-						todos.append(rest_of_comment)
+                    # loop through remaining comment to locate 
+                    # any "empty" lines  
+                    found = False
+                    for end_index,newLine in enumerate(rest_of_comment,index):
+                        if len(newLine) == 0:
+                            # if "empty" line found
+                            todos.append(comment_line_by_line[index:end_index])
+                            found = True
+                            break
+                    if not found:
+                        # if no "empty" lines found 
+                        todos.append(rest_of_comment)
 
-				else:
-					continue
+                else:
+                    continue
 
-	return todos
+    return todos
 
 def merge_single_line_comments(tokens_with_lines):
     '''
@@ -184,15 +184,28 @@ def merge_single_line_comments(tokens_with_lines):
 
     return new_token_mapping
             
+def expand_file_paths(file_names):
 
+    # grab all files and place in list
+    final_file_names = []
+
+    # loop through the directories to find files and add them to a list
+    for file_name in file_names:
+
+        if os.path.isfile(file_name):
+            final_file_names.append(file_name)
+        else:
+            for dirName, subDirectories, files in os.walk(file_name):
+                for f in files:
+                    final_file_names.append(os.path.join(dirName, f))
+    return final_file_names
 
 
 def main():
     args = parse_args()
 
-    file_names = args.files
+    file_names = expand_file_paths(args.files)
     keywords = args.keywords
-    
 
 
     #find_Keywords(comment, keywords)
@@ -218,7 +231,6 @@ def main():
 
     for error in global_error_list:
         print(error)
-
 
 
 if __name__=='__main__':
