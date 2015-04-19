@@ -52,18 +52,19 @@ def get_tokens_from_file(filepath):
     # TODO Determine the best way of figuring out the mimetype for certain files,
     #      right now we suck.. Like bad.
     try:
-        lexer = guess_lexer(file_text)
-    except Exception as e:
         lexer = guess_lexer_for_filename(filepath, file_text)
+    except Exception as e:
+        lexer = guess_lexer(file_text)
     finally:
         if lexer == None:
             global_error_list.append("ERROR:\tUnable to find a lexer\n\t\t\tCan't process " + str(filepath))
             return {}
-    
+    #print(lexer)
     comments_with_lines = {}
 
     # Get the comment tokens
     for comment in get_comment_tokens(file_text, lexer):
+        #print(comment)
         for num, line in enumerate(file_text.splitlines(), 1):
             # Eliminate issues with newlines as comments
             if len(comment.strip()) == 0:
@@ -160,9 +161,11 @@ def merge_single_line_comments(tokens_with_lines):
     new_lines_mapping = {}
     new_token_mapping = {}
 
+    # Build a graph mapping to the parent line number
     for line_num in line_numbers:
         new_lines = new_lines_mapping.keys()
         
+        # Check for the parent line or a link to it
         if line_num-1 in new_lines:
             old_line = line_num-1
             
@@ -171,20 +174,21 @@ def merge_single_line_comments(tokens_with_lines):
                 old_line = new_lines_mapping[old_line]
             new_lines_mapping[line_num] = old_line
         else:
+            # We are a parent, put us on the map!
             new_lines_mapping[line_num] = line_num
 
+    # Now that the graph is built, build the array of comments
     for line_num in line_numbers:
         if line_num != new_lines_mapping[line_num]:
             new_token_mapping[new_lines_mapping[line_num]].append((tokens_with_lines[line_num]))
         else:
             new_token_mapping[line_num] = [tokens_with_lines[line_num]]
 
+    # Merge the comments that are groupped together
     for line_parent in new_token_mapping.keys():
         new_token_mapping[line_parent] = "\n".join(new_token_mapping[line_parent]).strip()
 
     return new_token_mapping
-            
-
 
 
 def main():
@@ -193,8 +197,6 @@ def main():
     file_names = args.files
     keywords = args.keywords
     
-
-
     #find_Keywords(comment, keywords)
     #comment = "                     #TODO"
     #find_Keywords(comment, keywords)
@@ -206,10 +208,10 @@ def main():
         tokens_with_lines = get_tokens_from_file(file)
 
 
-
-        for line_number in tokens_with_lines.keys():
+        cleaned_up_tokens = merge_single_line_comments(tokens_with_lines)
+        for line_number in sorted(tokens_with_lines.keys()):
             comment = tokens_with_lines[line_number]
-            #print(str(line_number) + " : '" + comment + "'")
+            print(str(line_number) + " : '" + comment + "'")
             todos = find_Keywords(comment, keywords)
             for todo in todos:
                 print(todo)
