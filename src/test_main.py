@@ -1,18 +1,16 @@
 import pytest
 from src.main import *
 
-test_files = [  "examples/C/filenames/script", "examples/Clojure/index.cljs.hl", 
-                "examples/Chapel/lulesh.chpl", "examples/Forth/core.fth", 
+test_files = [  "examples/C/filenames/script", "examples/Clojure/index.cljs.hl", "examples/Forth/core.fth", 
                 "examples/GAP/Magic.gd", "examples/JavaScript/steelseries-min.js",
                 "examples/Matlab/FTLE_reg.m", "examples/Perl6/for.t",
                 "examples/VimL/solarized.vim", "examples/C/cpu.c",
-                "examples/CSS/bootstrap.css", "examples/D/mpq.d",
-                "examples/Go/api.pb.go", "examples/HTML+ERB/index.html.erb"]
+                "examples/D/mpq.d", "examples/Go/api.pb.go", 
+                "examples/HTML+ERB/index.html.erb"]
 
 number_of_comments = [
     423,# examples/C/filenames/script
     13, # examples/Clojure/index.cljs.hl
-    609,# examples/Chapel/lulesh.chpl
     0,  # examples/Forth/core.fth
     3,  # examples/GAP/Magic.gd 
     2,  # examples/JavaScript/steelseries-min.js
@@ -20,11 +18,11 @@ number_of_comments = [
     586,# examples/Perl6/for.t
     20, # examples/VimL/solarized.vim
     39, # examples/C/cpu.c
-    680,# examples/CSS/bootstrap.css
     167,# examples/D/mpq.d 
     0,  # examples/Go/api.pb.go
     10  # examples/HTML+ERB/index.html.erb
 ]
+
 def test_get_comment_tokens():
     from pygments.lexers.c_cpp import CLexer
 
@@ -44,4 +42,18 @@ def test_get_tokens_from_file():
         #print(index)
         print(file)
         assert number_of_comments[index] == len(result.keys())
+
+def test_merge_single_line_comments():
+    token_to_line_mapping = {}
+    token_to_line_mapping[1] = "# Line 1"
+    token_to_line_mapping[2] = "# Line 2"
+    token_to_line_mapping[3] = "# Line 3"
+    token_to_line_mapping[4] = "# Line 4"
+    token_to_line_mapping[6] = "# Line 6"
+    token_to_line_mapping[7] = "# Line 7"
+
+    merged_result = merge_single_line_comments(token_to_line_mapping)
+
+    # Check that the lines we expect to merge were merged
+    assert 1 in merged_result.keys() and 6 in merged_result.keys()
 
