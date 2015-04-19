@@ -30,7 +30,7 @@ def parse_args():
     
     # take command line arguments and make array
     parser.add_argument('files', type=str, nargs = '+', help = "File for TODO checking")
-    parser.add_argument('-k', '--keywords', type=str, nargs = '*', default=['TODO'], 
+    parser.add_argument('-k', '--keywords', type=str, nargs = '*', default=['TODO', 'todo', 'FIXME'], 
                         help = "Keywords for TODO items, case sensitive. Defaults to TODO")
     parser.add_argument('--json', action='store_const', const=True)
 
