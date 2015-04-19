@@ -43,10 +43,16 @@ def get_tokens_from_file(filepath):
     # Check if filename is an actual valid file
     if os.path.isfile(filepath):
         with open(filepath) as file:
-            for line in file:
-                file_text += line
+            try:
+                for line in file:
+                    file_text += line
+            except UnicodeDecodeError as e:
+                global_error_list.append( filepath + " : " + str(e))
+                return {}
+
     else:
         global_error_list.append("ERROR: " + filepath + " is not a file. Can't process.")
+        return {}
 
     # Determine the lexer we need to use to understand this file
     lexer = None
@@ -249,11 +255,8 @@ def main():
     else:
         for t in TODOS:
             print(t)
-
-
-
-    for error in global_error_list:
-        print(error)
+        for error in global_error_list:
+            print(error)
 
 
 if __name__=='__main__':
