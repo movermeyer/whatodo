@@ -1,5 +1,5 @@
 def main():
     """Entry point for the application script"""
-    import main
+    import src.main
     main.main()
     

@@ -6,6 +6,7 @@ import json
 from argparse import ArgumentParser
 from pygments.token import *
 from pygments.lexers import guess_lexer, guess_lexer_for_filename
+from src.todo import TODO
 
 global_error_list = []
 
@@ -29,8 +30,9 @@ def parse_args():
     
     # take command line arguments and make array
     parser.add_argument('files', type=str, nargs = '+', help = "File for TODO checking")
-    parser.add_argument('-k', '--keywords', type=str, nargs = '*', default=['TODO'], 
+    parser.add_argument('-k', '--keywords', type=str, nargs = '*', default=['TODO', 'todo', 'FIXME'], 
                         help = "Keywords for TODO items, case sensitive. Defaults to TODO")
+    parser.add_argument('--json', action='store_const', const=True)
 
     return parser.parse_args()
 
@@ -52,14 +54,14 @@ def get_tokens_from_file(filepath):
     # TODO Determine the best way of figuring out the mimetype for certain files,
     #      right now we suck.. Like bad.
     try:
-        lexer = guess_lexer(file_text)
-    except Exception as e:
         lexer = guess_lexer_for_filename(filepath, file_text)
+    except Exception as e:
+        lexer = guess_lexer(file_text)
     finally:
         if lexer == None:
             global_error_list.append("ERROR:\tUnable to find a lexer\n\t\t\tCan't process " + str(filepath))
             return {}
-    
+    #print(lexer)
     comments_with_lines = {}
 
     # Get the comment tokens
@@ -73,7 +75,11 @@ def get_tokens_from_file(filepath):
             first_comment_line = comment.splitlines()[0]
 
             if first_comment_line in line:
-                comments_with_lines[num] = comment
+                if num in comments_with_lines.keys():
+                    continue
+                else:
+                    comments_with_lines[num] = comment
+                    break
     
     return comments_with_lines
 
@@ -99,7 +105,6 @@ def get_comment_tokens(file_text, lexer):
             yield tokens[1]
 
 def find_Keywords(comment, keywords):
-    
     # constants
     array = []
     count = 0
@@ -122,7 +127,6 @@ def find_Keywords(comment, keywords):
                 continue
             else:
                 if index_of_keyword < 10:
-                    print("GOT IT!")
                     rest_of_comment = comment_line_by_line[index:]
 
                     # loop through remaining comment to locate 
@@ -160,9 +164,11 @@ def merge_single_line_comments(tokens_with_lines):
     new_lines_mapping = {}
     new_token_mapping = {}
 
+    # Build a graph mapping to the parent line number
     for line_num in line_numbers:
         new_lines = new_lines_mapping.keys()
         
+        # Check for the parent line or a link to it
         if line_num-1 in new_lines:
             old_line = line_num-1
             
@@ -171,14 +177,17 @@ def merge_single_line_comments(tokens_with_lines):
                 old_line = new_lines_mapping[old_line]
             new_lines_mapping[line_num] = old_line
         else:
+            # We are a parent, put us on the map!
             new_lines_mapping[line_num] = line_num
 
+    # Now that the graph is built, build the array of comments
     for line_num in line_numbers:
         if line_num != new_lines_mapping[line_num]:
             new_token_mapping[new_lines_mapping[line_num]].append((tokens_with_lines[line_num]))
         else:
             new_token_mapping[line_num] = [tokens_with_lines[line_num]]
 
+    # Merge the comments that are groupped together
     for line_parent in new_token_mapping.keys():
         new_token_mapping[line_parent] = "\n".join(new_token_mapping[line_parent]).strip()
 
@@ -206,26 +215,40 @@ def main():
 
     file_names = expand_file_paths(args.files)
     keywords = args.keywords
-
+    use_json = args.json
+    
 
     #find_Keywords(comment, keywords)
     #comment = "                     #TODO"
     #find_Keywords(comment, keywords)
 
+    TODOS = []
+    
+
     for file in file_names:
-        print("*" * 60)
-        print("File:\t" +  file)
-        print("*" * 60)
         tokens_with_lines = get_tokens_from_file(file)
 
 
-
-        for line_number in tokens_with_lines.keys():
+        cleaned_up_tokens = merge_single_line_comments(tokens_with_lines)
+        for line_number in sorted(tokens_with_lines.keys()):
             comment = tokens_with_lines[line_number]
             #print(str(line_number) + " : '" + comment + "'")
             todos = find_Keywords(comment, keywords)
+
             for todo in todos:
-                print(todo)
+                if len(todo) > 1:
+                    todo = "\n".join(todo).strip()
+                TODOS.append(TODO(comment, file, line_number, keywords))
+
+    if use_json:
+        TODOS_JSON = []
+        for t in TODOS:
+            TODOS_JSON.append(t.__dict__())
+        todos_json = json.dumps(TODOS_JSON)
+        print(todos_json)
+    else:
+        for t in TODOS:
+            print(t)
 
 
 
