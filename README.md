@@ -11,7 +11,8 @@ whatodo is created to make locating theses comments easier. This app can read th
 number of files and locate these comments returning the line number of the contents of the actual comment.
 
 The application is written in pure Python with the help of the pygments library. With this 
-library we are able to parse through more than 100+ languages, for a more detailed description see [pygments docs](http://pygments.org/languages/)
+library we are able to parse through more than 100+ languages, for a more detailed description 
+see [pygments docs](http://pygments.org/languages/)
 
 # Usage
 The most common use case would be scanning a whole source directory for tags, to achieve 
@@ -43,10 +44,9 @@ A list of files or directories to analyze and look for TODO's. At least 1 file m
 # Installing
 
 To install simply do:  
-```shell
+```
 pip install whatodo
 ```
-
 
 # License
 MIT License for more details see /LICENSE
