@@ -9,18 +9,18 @@ test_files = [  "examples/C/filenames/script", "examples/Clojure/index.cljs.hl",
                 "examples/HTML+ERB/index.html.erb"]
 
 number_of_comments = [
-    423,# examples/C/filenames/script
-    13, # examples/Clojure/index.cljs.hl
-    0,  # examples/Forth/core.fth
-    3,  # examples/GAP/Magic.gd 
-    2,  # examples/JavaScript/steelseries-min.js
-    6,  # examples/Matlab/FTLE_reg.m
-    586,# examples/Perl6/for.t
-    20, # examples/VimL/solarized.vim
-    39, # examples/C/cpu.c
-    167,# examples/D/mpq.d 
-    0,  # examples/Go/api.pb.go
-    10  # examples/HTML+ERB/index.html.erb
+    423,    # examples/C/filenames/script
+    13,     # examples/Clojure/index.cljs.hl
+    0,      # examples/Forth/core.fth
+    303,    # examples/GAP/Magic.gd 
+    2,      # examples/JavaScript/steelseries-min.js
+    0,      # examples/Matlab/FTLE_reg.m
+    586,    # examples/Perl6/for.t
+    1117,   # examples/VimL/solarized.vim
+    95,     # examples/C/cpu.c
+    36,     # examples/D/mpq.d 
+    184,    # examples/Go/api.pb.go
+    10      # examples/HTML+ERB/index.html.erb
 ]
 
 def test_get_comment_tokens():
