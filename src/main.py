@@ -64,7 +64,6 @@ def get_tokens_from_file(filepath):
 
     # Get the comment tokens
     for comment in get_comment_tokens(file_text, lexer):
-        #print(comment)
         for num, line in enumerate(file_text.splitlines(), 1):
             # Eliminate issues with newlines as comments
             if len(comment.strip()) == 0:
@@ -74,7 +73,11 @@ def get_tokens_from_file(filepath):
             first_comment_line = comment.splitlines()[0]
 
             if first_comment_line in line:
-                comments_with_lines[num] = comment
+                if num in comments_with_lines.keys():
+                    continue
+                else:
+                    comments_with_lines[num] = comment
+                    break
     
     return comments_with_lines
 
