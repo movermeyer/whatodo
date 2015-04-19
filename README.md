@@ -34,7 +34,10 @@ A list of files or directories to analyze and look for TODO's. At least 1 file m
 
 # Installing
 
-To install simply do ```pip install whatodo```
+To install simply do:  
+```shell
+pip install whatodo
+```
 
 
 # License
