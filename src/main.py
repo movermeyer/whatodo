@@ -140,8 +140,52 @@ def find_Keywords(comment, keywords):
 
 				else:
 					continue
-	print(todos)
+
 	return todos
+
+def merge_single_line_comments(tokens_with_lines):
+    '''
+
+    Arguments
+    ---------
+        tokens_with_lines : dict
+
+    Returns
+    -------
+        new_token_mapping: dict
+            Mapping with the adjecent lines 
+    '''
+    line_numbers = sorted(tokens_with_lines.keys())
+
+    new_lines_mapping = {}
+    new_token_mapping = {}
+
+    for line_num in line_numbers:
+        new_lines = new_lines_mapping.keys()
+        
+        if line_num-1 in new_lines:
+            old_line = line_num-1
+            
+            # Follow the mapping to its original
+            while(old_line != new_lines_mapping[old_line]):
+                old_line = new_lines_mapping[old_line]
+            new_lines_mapping[line_num] = old_line
+        else:
+            new_lines_mapping[line_num] = line_num
+
+    for line_num in line_numbers:
+        if line_num != new_lines_mapping[line_num]:
+            new_token_mapping[new_lines_mapping[line_num]].append((tokens_with_lines[line_num]))
+        else:
+            new_token_mapping[line_num] = [tokens_with_lines[line_num]]
+
+    for line_parent in new_token_mapping.keys():
+        new_token_mapping[line_parent] = "\n".join(new_token_mapping[line_parent]).strip()
+
+    return new_token_mapping
+            
+
+
 
 def main():
     args = parse_args()
@@ -160,10 +204,16 @@ def main():
         print("File:\t" +  file)
         print("*" * 60)
         tokens_with_lines = get_tokens_from_file(file)
+
+
+
         for line_number in tokens_with_lines.keys():
             comment = tokens_with_lines[line_number]
-            print(str(line_number) + " : '" + comment + "'")
-            find_Keywords(comment, keywords)
+            #print(str(line_number) + " : '" + comment + "'")
+            todos = find_Keywords(comment, keywords)
+            for todo in todos:
+                print(todo)
+
 
 
     for error in global_error_list:
