@@ -6,7 +6,7 @@ import json
 from argparse import ArgumentParser
 from pygments.token import *
 from pygments.lexers import guess_lexer, guess_lexer_for_filename
-from todo import TODO
+from src.todo import TODO
 
 global_error_list = []
 
