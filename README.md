@@ -1,8 +1,11 @@
 Whatodo
 =======
   
-![Build Status](https://travis-ci.org/masterkoppa/whatodo.svg)  
-[![Coverage Status](https://coveralls.io/repos/masterkoppa/whatodo/badge.svg?branch=master)](https://coveralls.io/r/masterkoppa/whatodo?branch=master)  
+![Build Status](https://travis-ci.org/masterkoppa/whatodo.svg)
+[![Coverage Status](https://coveralls.io/repos/masterkoppa/whatodo/badge.svg?branch=master)](https://coveralls.io/r/masterkoppa/whatodo?branch=master)
+[![Latest Version](https://pypip.in/version/whatodo/badge.svg)](https://pypi.python.org/pypi/whatodo/)
+[![Downloads](https://pypip.in/download/whatodo/badge.svg)](https://pypi.python.org/pypi/whatodo/)
+
 # Description
 In software development and any other area of coding it is a common occerance to use comments 
 for TODO and FIXME for two examples. It can be difficult with large files and/or large numbers 
