@@ -1,8 +1,8 @@
 Whatodo
 =======
   
-![Build Status](https://travis-ci.org/masterkoppa/whatodo.svg)
-  
+![Build Status](https://travis-ci.org/masterkoppa/whatodo.svg)  
+[![Coverage Status](https://coveralls.io/repos/masterkoppa/whatodo/badge.svg?branch=master)](https://coveralls.io/r/masterkoppa/whatodo?branch=master)  
 # Description
 In software development and any other area of coding it is a common occerance to use comments 
 for TODO and FIXME for two examples. It can be difficult with large files and/or large numbers 
