@@ -5,6 +5,9 @@ python:
     - pypy3
 
 install:
-    - pip install -e .
+    - pip install -e .[test]
 
-script: py.test src/
+script: py.test --cov src/ src/
+
+after_success:
+    - coveralls
