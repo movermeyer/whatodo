@@ -1,6 +1,6 @@
 Whatodo
 =======
-[![Build Status](https://travis-ci.org/masterkoppa/whatodo.svg?branch=master)](https://travis-ci.org/masterkoppa/whatodo)  
+[![Build Status](https://travis-ci.org/masterkoppa/whatodo.svg?branch=master)](https://travis-ci.org/masterkoppa/whatodo)
 [![Coverage Status](https://coveralls.io/repos/masterkoppa/whatodo/badge.svg?branch=master)](https://coveralls.io/r/masterkoppa/whatodo?branch=master)
 [![Latest Version](https://pypip.in/version/whatodo/badge.svg)](https://pypi.python.org/pypi/whatodo/)
 [![Downloads](https://pypip.in/download/whatodo/badge.svg)](https://pypi.python.org/pypi/whatodo/)
