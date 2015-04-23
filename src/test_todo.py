@@ -37,3 +37,9 @@ def test_todo_create():
 	test_E_todo = TODO(test_E, '', 1, ["TODO"])
 
 	assert test_E_todo.body == "With a body too!"
+
+def test_todo_repr():
+	test_c_todo = TODO(test_c, '', 1, ["TODO"])
+	print(test_c_todo)
+
+	assert str(test_c_todo).index("testing") == 12

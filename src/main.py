@@ -10,7 +10,7 @@ from src.todo import TODO
 
 global_error_list = []
 
-def parse_args():
+def parse_args(args = None):
     '''
     Argument Parsing Helper Function
 
@@ -34,7 +34,7 @@ def parse_args():
                         help = "Keywords for TODO items, case sensitive. Defaults to TODO")
     parser.add_argument('--json', action='store_const', const=True)
 
-    return parser.parse_args()
+    return parser.parse_args(args)
 
 def get_tokens_from_file(filepath):
     # Read the file in
@@ -81,9 +81,7 @@ def get_tokens_from_file(filepath):
             first_comment_line = comment.splitlines()[0]
 
             if first_comment_line in line:
-                if num in comments_with_lines.keys():
-                    continue
-                else:
+                if not num in comments_with_lines.keys():
                     comments_with_lines[num] = comment
                     break
     
@@ -129,27 +127,21 @@ def find_Keywords(comment, keywords):
 
             # get the index of the matching word 
             # only use if the index is < 10 and > -1
-            if index_of_keyword == -1:
-                continue
-            else:
-                if index_of_keyword < 10:
-                    rest_of_comment = comment_line_by_line[index:]
+            if index_of_keyword > -1 and index_of_keyword < 10:
+                rest_of_comment = comment_line_by_line[index:]
 
-                    # loop through remaining comment to locate 
-                    # any "empty" lines  
-                    found = False
-                    for end_index,newLine in enumerate(rest_of_comment,index):
-                        if len(newLine) == 0:
-                            # if "empty" line found
-                            todos.append(comment_line_by_line[index:end_index])
-                            found = True
-                            break
-                    if not found:
-                        # if no "empty" lines found 
-                        todos.append(rest_of_comment)
-
-                else:
-                    continue
+                # loop through remaining comment to locate 
+                # any "empty" lines  
+                found = False
+                for end_index,newLine in enumerate(rest_of_comment,index):
+                    if len(newLine) == 0:
+                        # if "empty" line found
+                        todos.append(comment_line_by_line[index:end_index])
+                        found = True
+                        break
+                if not found:
+                    # if no "empty" lines found 
+                    todos.append(rest_of_comment)
 
     return todos
 
@@ -222,11 +214,6 @@ def main():
     file_names = expand_file_paths(args.files)
     keywords = args.keywords
     use_json = args.json
-    
-
-    #find_Keywords(comment, keywords)
-    #comment = "                     #TODO"
-    #find_Keywords(comment, keywords)
 
     TODOS = []
     
@@ -238,7 +225,7 @@ def main():
         cleaned_up_tokens = merge_single_line_comments(tokens_with_lines)
         for line_number in sorted(tokens_with_lines.keys()):
             comment = tokens_with_lines[line_number]
-            #print(str(line_number) + " : '" + comment + "'")
+            
             todos = find_Keywords(comment, keywords)
 
             for todo in todos:

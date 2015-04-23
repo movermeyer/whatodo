@@ -114,3 +114,12 @@ def test_expand_file_paths():
     test_expand = expand_file_paths(path)
 
     assert len(test_expand) == 54
+
+
+def test_parse_args():
+    args = ["./examples/C", "-k", "FIXMEME"]
+
+    parsed = parse_args(args)
+
+    assert len(parsed.files) == 1
+    assert len(parsed.keywords) == 1
