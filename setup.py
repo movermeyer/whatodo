@@ -13,9 +13,12 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-# Get the long description from the relevant file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+try:
+    from pypandoc import convert
+    long_description = lambda f: convert(f, 'rst')
+except ImportError:
+    print("warning: pypandoc module not found, could not convert Markdown to RST")
+    long_description = lambda f: open(f, 'r').read()
 
 setup(
     name='whatodo',
@@ -23,10 +26,10 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.0a3',
+    version='0.1.0a4',
 
     description='Python app to help developers manage development tasks using TODO\'s',
-    long_description=long_description,
+    long_description=long_description("README.md"),
 
     # The project's main homepage.
     url='https://github.com/masterkoppa/whatodo',
@@ -77,7 +80,7 @@ setup(
     # for example:
     # $ pip install -e .[dev,test]
     extras_require={
-        'dev': ['pytest', 'pytest-cov'],
+        'dev': ['pytest', 'pytest-cov', 'pyandoc'],
         'test': ['pytest', 'pytest-cov', 'coveralls'],
     },
 
