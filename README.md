@@ -2,8 +2,8 @@ Whatodo
 =======
 [![Build Status](https://travis-ci.org/masterkoppa/whatodo.svg?branch=master)](https://travis-ci.org/masterkoppa/whatodo)
 [![Coverage Status](https://coveralls.io/repos/masterkoppa/whatodo/badge.svg?branch=master)](https://coveralls.io/r/masterkoppa/whatodo?branch=master)
-[![Latest Version](https://pypip.in/version/whatodo/badge.svg)](https://pypi.python.org/pypi/whatodo/)
-[![Downloads](https://pypip.in/download/whatodo/badge.svg)](https://pypi.python.org/pypi/whatodo/)
+[![Latest Version](https://img.shields.io/pypi/v/whatodo.svg)](https://pypi.python.org/pypi/whatodo/)
+[![Downloads](https://img.shields.io/pypi/dm/whatodo.svg)](https://pypi.python.org/pypi/whatodo/)
 
 # Description
 In software development and any other area of coding it is a common occerance to use comments 
